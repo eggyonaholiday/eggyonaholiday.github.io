@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gen AI Quiz Intro</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body {
+      font-family: Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background-color: #f4f4f4;
+      background-image: url('pexels-googledeepmind-17486102.jpg'); /* Replace with your image URL */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    #intro-container {
+      width: 960px;
+      height: 540px;
+      background: #d96a87;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    #intro-text {
+      font-size: 1.2em;
+      color: #fff;
+      margin: 0 auto;
+      padding: 10px 20px;
+      line-height: 1.5;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    #start-button {
+  margin: 20px auto;
+  padding: 15px 30px;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #fff;
+  background: #c34c74;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  z-index: 10; /* Ensures the button is above the cat */
+  position: absolute; /* Allows precise placement */
+  bottom: 270px; /* Adjust to move the button above the cat */
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#start-button:hover {
+  background: #a54261;
+}
+
+    #cat {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 5; /* Lower than the button */
+    }
+
+    #cat img {
+      width: 250px;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+    <audio id="background-music" autoplay loop>
+        <source src="technology-278512.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+<div id="intro-container">
+  <div id="intro-text">
+    <p>Hello! I am SparkTail, a RoboCat from the 22nd century.</p>
+    <p>With AI becoming more prevalent in the future, I am here to educate you on the dangers and benefits of AI!</p>
+    <p>I'm here to guide you through this quiz on Gen AI. Are you ready?</p>
+  </div>
+  <button id="start-button">Start</button>
+  <div id="cat">
+    <img id="cat-image" src="cat blinking 1 (2).png" alt="Cat Animation">
+  </div>
+</div>
+
+<script>
+      $(document).ready(function () {
+    // Set background music volume
+    let bgMusic = document.getElementById("background-music");
+    bgMusic.volume = 0.5; // Adjust volume as needed
+
+    // Ensure music plays even if user interaction is required (for some browsers)
+    $(document).on("click", function () {
+      if (bgMusic.paused) {
+        bgMusic.play();
+      }
+    });
+  });
+  function typeText(element, text, delay) {
+    let i = 0;
+    function type() {
+      if (i < text.length) {
+        $(element).append(text.charAt(i));
+        i++;
+        setTimeout(type, delay);
+      }
+    }
+    type();
+  }
+
+  $(document).ready(function () {
+    let introText = [
+      "Hello! I am SparkTail, a RoboCat from the 22nd century.",
+      "With AI becoming more prevalent in the future, I am here to educate you on the dangers and benefits of AI!",
+      "I'm here to guide you through this quiz on Gen AI. Are you ready?"
+    ];
+
+    $("#intro-text").html(""); // Clear existing text
+
+    function typeParagraphs(index) {
+      if (index < introText.length) {
+        let paragraph = $("<p></p>").appendTo("#intro-text");
+        typeText(paragraph, introText[index], 50);
+        setTimeout(() => typeParagraphs(index + 1), introText[index].length * 50 + 500);
+      }
+    }
+
+    typeParagraphs(0); // Start typing effect
+  });
+  
+  $(document).ready(function () {
+    // Array of image URLs for cat animation
+    const catImages = ["cat blinking 1 (2).png", "cat blinking 2 (2).png"];
+    let currentImageIndex = 0;
+
+    function animateCat() {
+      currentImageIndex = (currentImageIndex + 1) % catImages.length;
+      $("#cat-image").attr("src", catImages[currentImageIndex]);
+    }
+
+    // Set interval for cat blinking animation
+    setInterval(animateCat, 1000);
+
+    // Navigate to the quiz when the Start button is clicked
+    $("#start-button").on("click", function () {
+      window.location.href = "mcq.html"; // Replace with the actual path to your quiz page
+    });
+  });
+</script>
+
+</body>
+</html>
