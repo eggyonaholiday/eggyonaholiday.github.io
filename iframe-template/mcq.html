@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gen AI Quiz</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body {
+      font-family: Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background-color: #f4f4f4;
+      background-image: url('pexels-googledeepmind-17486102.jpg'); 
+      background-size: cover; 
+      background-position: center; 
+      background-repeat: no-repeat; 
+    }
+
+    #quiz-container {
+      width: 960px;
+      height: 540px;
+      background: #d96a87;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      text-align: center;
+      position: relative; 
+      overflow: hidden;
+      display: flex;
+      flex-direction: column; 
+      justify-content: space-between; 
+    }
+
+
+    #progress-bar {
+      width: 100%;
+      height: 20px;
+      background: #ddd;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    #progress {
+      width: 0;
+      height: 100%;
+      background: #c34c74;
+      transition: width 0.3s;
+    }
+
+    .question {
+      margin-bottom: 20px;
+      font-size: 1.2em;
+    }
+
+    .options button {
+      display: block;
+      margin: 10px auto;
+      padding: 10px 20px;
+      font-size: 1em;
+      cursor: pointer;
+      border-radius: 25px;
+    }
+
+    .options button.correct {
+      background-color: #a5d78e;
+      color: #fff;
+    }
+
+    .options button.incorrect {
+      background-color: #e37971;
+      color: #fff;
+    }
+
+    #comment {
+      margin-top: 20px;
+      font-size: 1.1em;
+    }
+
+    #score {
+      font-size: 1.5em;
+      margin-top: 20px;
+      color: white;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    #restart-button {
+      display: none;
+      margin: 20px auto;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 25px;
+      background-color: #c34c74;
+      color: white;
+      border: none;
+    };
+
+  /* --- Fix for Cat Position --- */
+  #cat {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5; 
+}
+
+#cat img {
+  width: 250px;
+  height: auto;
+}
+
+</style>
+
+</head>
+<body>
+  <audio id="background-music" autoplay loop>
+    <source src="in-the-world-of-technology-285311.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+<div id="quiz-container">
+  <div id="progress-bar">
+    <div id="progress"></div>
+  </div>
+  <div id="quiz">
+    <p id="question-number">Question 1/10</p>
+    <p class="question"></p>
+    <div class="options"></div>
+    <div id="comment"></div>
+  </div>
+  <div id="score" style="display: none;"></div>
+  <button id="restart-button" onclick="window.location.href='intro.html'">Restart</button>
+
+
+  <div id="cat">
+    <img id="cat-image" src="cat blinking 1 (2).png" alt="Cat Animation" width="250">
+  </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+    // Set background music volume
+    let bgMusic = document.getElementById("background-music");
+    bgMusic.volume = 0.5; 
+
+    $(document).on("click", function () {
+      if (bgMusic.paused) {
+        bgMusic.play();
+      }
+    });
+  });
+  $(document).ready(function () {
+    const catImages = ["cat blinking 1 (2).png", "cat blinking 2 (2).png"];
+    let currentImageIndex = 0;
+
+    function animateCat() {
+      currentImageIndex = (currentImageIndex + 1) % catImages.length;
+      $("#cat-image").attr("src", catImages[currentImageIndex]);
+    }
+
+    let catAnimationInterval = setInterval(animateCat, 1000);
+
+    const questions = [
+      {
+        question: "What can Generative AI be used for?",
+        options: ["Text and image generation", "Storing large amounts of data"],
+        answer: 0,
+        comment: "Don't be too reliant on AI!",
+      },
+      { 
+      question: "How to generate a good prompt?", 
+      options: ["Persona, task, audience, context, format", "Name, place, object, colour, action"], 
+      answer: 0, 
+      comment: "Think about specificity and clarity!" 
+    },
+    { 
+      question: "How to spot deepfakes?", 
+      options: ["Perfectly natural expressions and lighting", "Lack of definition in edges of person"], 
+      answer: 1, 
+      comment: "Look for inconsistencies in lighting and facial expressions!" 
+    },
+    { 
+      question: "What is an example of AI used in daily life?", 
+      options: ["Automatic doors in shopping malls", "Personalised product recommendations on websites"], 
+      answer: 1, 
+      comment: "AI is often used in digital services!" 
+    },
+    { 
+      question: "What is a risk of Generative AI?", 
+      options: ["Data privacy concerns", "Slower internet"], 
+      answer: 0, 
+      comment: "Be mindful of data security and misinformation!" 
+    },
+    { 
+      question: "How to spot AI-generated misinformation?", 
+      options: ["Trust the content if it looks professional", "Check the source and cross-reference information"], 
+      answer: 1, 
+      comment: "Always verify your sources!" 
+    },
+    { 
+      question: "Why is it important to verify information by Generative AI?", 
+      options: ["AI can 'hallucinate' and produce false information.", "It is unimportant as AI is always right."], 
+      answer: 0, 
+      comment: "AI can make mistakes!" 
+    },
+    { 
+      question: "What is an ethical concern related to Generative AI?", 
+      options: ["Faster processing speeds", "Bias in AI-generated content"], 
+      answer: 1, 
+      comment: "Bias in AI can reinforce discrimination!" 
+    },
+    { 
+      question: "What is an example of Generative AI in entertainment?", 
+      options: ["Traditional movie scripts", "AI-generated music or art"], 
+      answer: 1, 
+      comment: "AI is being used in creative fields!" 
+    },
+    { 
+      question: "Can AI replace human creativity?", 
+      options: ["No, it assists but doesn't replace creativity.", "Yes, it completely replaces."], 
+      answer: 0, 
+      comment: "AI enhances creativity, but humans drive original ideas!" 
+    }
+
+
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function updateBackground() {
+  const backgroundImages = [
+    'question 1.jpg',
+    'question 2.jpg',  
+    'question 3.jpg',
+    'question 4.jpg', 
+    'question 5.jpg', 
+    'question 6.jpg', 
+    'question 7.jpg', 
+    'question 8.jpg', 
+    'question 9.jpg', 
+    'question 10.jpg'
+  ];
+
+  if (currentQuestion < backgroundImages.length) {
+    $("body").css("background-image", `url('${backgroundImages[currentQuestion]}')`);
+  }
+}
+
+
+    function loadQuestion() {
+      const question = questions[currentQuestion];
+      $("#question-number").text(`Question ${currentQuestion + 1}/${questions.length}`);
+      $(".question").text(question.question);
+      $(".options").empty();
+      question.options.forEach((option, index) => {
+        $(".options").append(`<button data-index="${index}">${option}</button>`);
+      });
+      $("#comment").text("");
+
+
+      updateBackground();
+    }
+
+    function updateProgressBar() {
+      const progress = ((currentQuestion + 1) / questions.length) * 100;
+      $("#progress").css("width", `${progress}%`);
+    }
+
+    $(".options").on("click", "button", function () {
+      const selected = $(this).data("index");
+      const question = questions[currentQuestion];
+
+      if (selected === question.answer) {
+        $(this).addClass("correct");
+        score++;
+      } else {
+        $(this).addClass("incorrect");
+        $(`.options button[data-index='${question.answer}']`).addClass("correct");
+      }
+
+      $("#comment").text(question.comment);
+
+      setTimeout(() => {
+  currentQuestion++;
+  if (currentQuestion < questions.length) {
+    loadQuestion();
+    updateProgressBar();
+  } else {
+    $("#quiz").hide();
+    $("#score").show().text(`You scored ${score} out of ${questions.length}!`);
+    $("#restart-button").show();
+
+    $("body").css("background-image", "url('pexels-googledeepmind-17486102.jpg')");
+
+    clearInterval(catAnimationInterval); 
+    if (score >= 8) {
+      catImages.splice(1, 1, "cat when 8 and above (2).png");
+    } else if (score >= 5) {
+      catImages.splice(1, 1, "cat when 5-7 (2).png");
+    } else {
+      catImages.splice(1, 1, "cat when below 5 (2).png");
+    }
+
+    catAnimationInterval = setInterval(animateCat, 1000);
+  }
+}, 4000);
+
+    });
+
+    loadQuestion();
+    updateProgressBar();
+  });
+</script>
+
+</body>
+</html>
